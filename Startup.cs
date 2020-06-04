@@ -1,6 +1,9 @@
 ﻿namespace NetSalaryCalculator
 {
-	using System;
+    using System;
+	using NetSalaryCalculator.Entities;
+	using NetSalaryCalculator.Entities.Taxes;
+
 	public class Startup
 	{
 		static void Main()
@@ -17,16 +20,21 @@
 
 					try
 					{
-						Console.Write("\nEnter the emplyee name: ");
+						Print.Info("\nEnter the emplyee name: ");
 						string name = Console.ReadLine().Trim();
 						
-						Console.Write("Enter the gross salary: ");
+						Print.Info("Enter the gross salary: ");
 						string inputSalary = Console.ReadLine();
 
 						if (Validator.ValidateName(name) && Validator.TryParceSalary(inputSalary, out grossSalary))
 						{
-							EmployeeInfo info = new EmployeeInfo(name, grossSalary);
-							Console.WriteLine(info);
+							EmployeeInfo info = new EmployeeInfo(
+								name, 
+								grossSalary, 
+								new MainTax(grossSalary), 
+								new SocialContribution(grossSalary));
+							
+							Print.Info(info.ToString());
 
 							isValidInput = true;
 						}
@@ -37,7 +45,7 @@
 					}
 				}
 
-				Console.WriteLine("!!!Press Q to quit or any others key to continue.!!!");
+				Print.Info("\n!!!Press Q to quit or any others key to continue!!!\n");
 
 			} while (Console.ReadKey().Key != ConsoleKey.Q);
 		}
